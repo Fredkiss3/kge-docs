@@ -21,9 +21,10 @@ Vous verrez vos jeux prendre vie en quelques lignes de code, la preuve :
 .. code:: python
 
     import kge
+    from kge import *
 
     def setup(scene):
-        scene.add(kge.Sprite(image=kge.Image('player.png')))
+        scene.add(Sprite(image=Image('player.png')))
 
     kge.run(setup)
 

@@ -94,9 +94,10 @@ Copiez le fichier dans le dossier de votre jeu, et ajouter ceci dans votre code 
 .. code:: python
 
     import kge
+    from kge import *
 
     def setup(scene):
-        scene.add(kge.Sprite(image=kge.Image('player.png')))
+        scene.add(Sprite(image=Image('player.png')))
 
     kge.run(setup)
 
@@ -119,9 +120,9 @@ Afin de prendre le contrôle de notre vaisseau, il va falloir créer une nouvell
 
 .. code:: python
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
 
 Donc notre fichier ``game.py`` devient : 
 
@@ -129,10 +130,11 @@ Donc notre fichier ``game.py`` devient :
 
 
     import kge
+    from kge import *
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
 
     def setup(scene):
         scene.add(Player())
@@ -140,44 +142,35 @@ Donc notre fichier ``game.py`` devient :
     kge.run(setup)
 
 
-Si vous relancez le programme, vous ne constaterez aucun changement, mais là nous avons la base pour ajouter des comportements à notre vaisseau. Pour ce faire, il va falloir importer certains modules :
-
-.. code:: python
-
-
-    import kge
-    from kge import Inputs, Keys, Vector
-    from kge.events import Update
-
-Et définir notre logique dans la fonction ``on_update`` du ``Player`` que nous devons créer, sachez que vous allez définir presque tous les comportements de vos entités dans cette fonction :
+Si vous relancez le programme, vous ne constaterez aucun changement, mais là nous avons la base pour ajouter des comportements à notre vaisseau. Pour ce faire, définir notre logique dans la fonction ``on_update`` du ``Player`` que nous devons créer, sachez que vous allez définir presque tous les comportements de vos entités dans cette fonction :
 
 
 .. code:: python
 
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
 
-        def on_update(event: Update, dispatch):
+        def on_update(self, event: Update, dispatch):
             pass
 
 Cette fonction prend deux arguments en paramètres, ``event`` contient certains attributs importants que nous verrons plus tard et ``dispatch`` qui est une fonction que vous n'aurez pas tout le temps à utiliser. pour plus d'informations, veuillez lire la documentation dans la section `Evènements`_.
 
-Ainsi, ajoutons un peu de code pour gérer les entrées du clavier :
+Ainsi, ajoutons un peu de code pour gérer les entrées du clavier, pour cela **KGE** vient avec la classe ``Inputs``  qui permet de gérer facilement cela :
 
 ``game.py`` : 
 
 .. code:: python
 
     import kge
-    from kge import Inputs, Keys, Vector
+    from kge import *
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             if Inputs.get_key_down(Keys.Left):
                 # déplacer à gauche
                 self.position += Vector.Left()
@@ -200,10 +193,10 @@ Vous devez avoir remarqué que le joueur était bien trop rapide ! Ceci est tout
 
     # ... Les différents 'import'
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         # ... Code d'initialisation
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             if Inputs.get_key_down(Keys.Left):
                 # déplacer à gauche
                 # Multiplication par 'delta_time'
@@ -222,14 +215,14 @@ Pour cela il va falloir définir une vitesse de déplacement pour le joueur. Ain
 
     # ... Les différents 'import'
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
             # ... Code d'initialisation
 
             # Ajouter la variable pour la vitesse
             self.speed = 5
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             if Inputs.get_key_down(Keys.Left):
                 # déplacer à gauche
                 # Multiplication par 'delta_time'
@@ -248,14 +241,14 @@ Cette fois-ci notre vaisseau devrait pouvoir se déplacer à une vitesse convena
 .. code:: python
 
     import kge
-    from kge import Inputs, Keys, Vector
+    from kge import *
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
             self.speed = 5
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             if Inputs.get_key_down(Keys.Left):
                 # déplacer à gauche
                 # Multiplication par 'delta_time'
@@ -290,11 +283,11 @@ Dans notre code, nous ajoutons l'enemi :
 .. code:: python
 
     import kge
-    from kge import Inputs, Keys, Vector, BoxCollider
+    from kge import *
 
-    class Enemy(kge.Sprite):
+    class Enemy(Sprite):
         def __init__(self):
-            self.image = kge.Image('enemy.png')
+            self.image = Image('enemy.png')
 
             # Ajout du composant permettant de répondre aux collisions
             self.addComponent(
@@ -315,9 +308,9 @@ Ajoutons du code pour le projectile:
 
 .. code:: python
 
-    class Bullet(kge.Sprite):
+    class Bullet(Sprite):
         def __init__(self):
-            self.image = kge.Image('bullet.png')
+            self.image = Image('bullet.png')
 
             # Ajout d'un composant pour le déplacement par la physique
             rb = kge.RigidBody()
@@ -344,10 +337,10 @@ Afin de tirer le projectile, il faut appuyer le bouton espace donc :
 
 .. code:: python
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         #... Code d'initialisation
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             #... Code pour se déplacer
 
         def on_key_down(self, event, dispatch):
@@ -375,11 +368,11 @@ D'où le code complet :
 .. code:: python
 
     import kge
-    from kge import Inputs, Keys, Vector, BoxCollider
+    from kge import *
 
-    class Enemy(kge.Sprite):
+    class Enemy(Sprite):
         def __init__(self):
-            self.image = kge.Image('enemy.png')
+            self.image = Image('enemy.png')
 
             # Ajout du composant permettant de répondre aux collisions
             self.addComponent(
@@ -391,9 +384,9 @@ D'où le code complet :
             self.destroy()
 
 
-    class Bullet(kge.Sprite):
+    class Bullet(Sprite):
         def __init__(self):
-            self.image = kge.Image('bullet.png')
+            self.image = Image('bullet.png')
             
             # Ajout d'un composant pour le déplacement par la physique
             rb = kge.RigidBody()
@@ -415,12 +408,12 @@ D'où le code complet :
             # Détruire aussi le projectile, s'il touche l'enemi
             self.destroy()
 
-    class Player(kge.Sprite):
+    class Player(Sprite):
         def __init__(self):
-            self.image = kge.Image('player.png')
+            self.image = Image('player.png')
             self.speed = 5
 
-        def on_update(self, event, dispatch):
+        def on_update(self, event: Update, dispatch):
             if Inputs.get_key_down(Keys.Left):
                 # déplacer à gauche
                 # Multiplication par 'delta_time'
@@ -464,7 +457,8 @@ Un petit plus pour pouvoir y voir plus clair et afficher les boîtes de collisio
 .. code:: python
 
     import kge
-    from kge import Inputs, Keys, Vector, BoxCollider
+    from kge import *
+    # Importer cette bibliothèque pour le déboggage
     import logging
 
     #... Code du jeu
