@@ -16,7 +16,7 @@ import sys
 # At top on conf.py (with other import statements)
 import recommonmark
 
-sys.path.insert(0, os.path.abspath('../'))
+#sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
